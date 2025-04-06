@@ -1,8 +1,15 @@
 <div class="container">
     <h1>Hola este es mi primer proyecto</h1>
     <h2>{{ welcome }}</h2>
+    <!-- CommonModule versiones viejas -->
     <ul>
-        @for (task of tasks; track task) {
+        <li *ngFor="let task of tasks()">
+            {{ task }}
+        </li>
+    </ul>
+    <!-- Nuevas versiones de angular -->
+    <ul>
+        @for (task of tasks(); track task) {
         <li>{{ task }}</li>
         }
     </ul>
@@ -11,25 +18,57 @@
     <p>la suma de 3 + 3 es {{ 3 + 3}}</p>
     <p>Hola soy {{ name() }} y mi edad es {{ age }}</p>
     <hr />
-    <img [src]="person.avatar" alt="">
-    <input type="number" [value]="person.age">
+    <img [src]="person().avatar" alt="">
+    <input type="number" [value]="person().age">
     <button [disabled]="disabled">Click me!</button>
-    <p>person: {{ person.name }}</p>
+    <p>person: {{ person().name }}</p>
     <hr />
     <button (click)="clickHandler()">Click me!</button>
     <button (dblclick)="clickHandler()">Double me!</button>
     <p>(change)</p>
-    <input type="number" [value]="person.age" (change)="changeHandler($event)">
+    <input type="number" [value]="person().age" (change)="changeHandler($event)">
     <p>(change) No en tiempo real</p>
-    <input type="text" [value]="person.name" (change)="changeHandler($event)">
+    <input type="text" [value]="person().name" (change)="changeHandler($event)">
     <p>(keydown)</p>
-    <input type="text" [value]="person.name" (keydown)="keydownHandler($event)">
+    <input type="text" [value]="person().name" (keydown)="keydownHandler($event)">
     <p>(keydown shift + t)</p>
-    <input type="text" [value]="person.name" (keydown.shift.t)="clickHandler()">
+    <input type="text" [value]="person().name" (keydown.shift.t)="clickHandler()">
     <p>(keyup) Tiempo real</p>
-    <input type="text" [value]="person.name" (keyup)="keyupHandler($event)" />
+    <input type="text" [value]="person().name" (keyup)="keyupHandler($event)" />
     <hr />
     <h1>Signals</h1>
+    <p>total: {{ tasks().length }}</p>
+    <ul>
+        <li *ngFor="let task of tasks(); index as i">
+            {{ i }} {{ task }}
+        </li>
+    </ul>
     <input type="text" [value]="name()" (change)="changeHandler($event)">
     <p>name: {{ name() }}</p>
+    <hr />
+    <div *ngIf="1 !== 1">
+        My contend
+    </div>
+    <div *ngIf="name() == 'Alejo'">
+        Soy Alejo
+    </div>
+    <input type="number" [value]="person().age" (change)="changeAge($event)">
+    <div *ngIf="person().name == 'Alejo' && person().age > 18; else elseBlock ">
+        Soy Alejo y soy mayor de 18 años
+    </div>
+    <ng-template #elseBlock>
+        Soy Alejo y soy menor de 18 años
+    </ng-template>
+    <hr />
+    <input type="text" [value]="person().name" (change)="changeName($event)">
+    <div [ngSwitch]="person().name">
+        <p *ngSwitchCase="'Alejo'">Yo soy Alejo</p>
+        <p *ngSwitchCase="'Diego'">Yo soy Diego</p>
+        <p *ngSwitchCase="'Luisa'">Yo soy Luisa</p>
+        <p *ngSwitchCase="'Jaqueline'">Yo soy Jaqueline</p>
+        <p *ngSwitchDefault>Yo no soy nadie</p>
+    </div>
+    <hr />
+    <input type="color" [formControl]="colorCrtl">
+    <p>color: {{ colorCrtl.value }}</p>
 </div>

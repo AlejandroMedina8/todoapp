@@ -1,19 +1,21 @@
 import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common'; //Directivas de control versiones anteriores
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-labs',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './labs.component.html',
   styleUrl: './labs.component.css',
 })
 export class LabsComponent {
   welcome = 'Hola!';
-  tasks = [
+  tasks = signal([
     'Instalar el Angular CLI',
     'Crear proyecto',
     'Crear componente',
     'Crear servicio',
-  ];
+  ]);
   name = signal('Alejo');
   age = 24;
   // private age = 24;
@@ -21,12 +23,20 @@ export class LabsComponent {
   img =
     'https://files.idyllic.app/files/static/2772338?width=640&optimizer=image';
 
-  person = {
+  person = signal({
     name: 'Alejo',
     age: 24,
     avatar:
       'https://files.idyllic.app/files/static/2772338?width=640&optimizer=image',
-  };
+  });
+
+  colorCrtl = new FormControl();
+
+  constructor() {
+    this.colorCrtl.valueChanges.subscribe((value) => {
+      console.log(value);
+    });
+  }
 
   clickHandler() {
     alert('Hola');
@@ -46,5 +56,27 @@ export class LabsComponent {
   keyupHandler(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
     console.log(input.value);
+  }
+
+  changeAge(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.person.update((prevState) => {
+      return {
+        ...prevState,
+        age: parseInt(newValue, 10),
+      };
+    });
+  }
+
+  changeName(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.person.update((prevState) => {
+      return {
+        ...prevState,
+        name: newValue,
+      };
+    });
   }
 }

@@ -1,11 +1,73 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common'; //Directivas de control versiones anteriores
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { Task } from './../../models/task.model';
+import { NonNullAssert } from '@angular/compiler';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
+  tasks = signal<Task[]>([
+    {
+      id: Date.now(),
+      title: 'Crear proyecto',
+      completed: false,
+    },
+    {
+      id: Date.now(),
+      title: 'Crear componentes',
+      completed: false,
+    },
+  ]);
 
+  newTaskCtrl = new FormControl('', {
+    nonNullable: true,
+    validators: [
+      Validators.required,
+      Validators.pattern('^\\S.*$'),
+      Validators.minLength(3),
+    ],
+  });
+
+  changeHandler() {
+    if (this.newTaskCtrl.valid) {
+      const value = this.newTaskCtrl.value;
+      this.addTask(value.trim());
+      this.newTaskCtrl.setValue('');
+    }
+  }
+
+  addTask(title: string) {
+    const newTask = {
+      id: Date.now(),
+      title,
+      completed: false,
+    };
+    this.tasks.update((tasks) => [...tasks, newTask]);
+  }
+
+  deleteTask(index: number) {
+    this.tasks.update((tasks) =>
+      tasks.filter((task, position) => position !== index)
+    );
+  }
+
+  updateTask(index: number) {
+    this.tasks.update((tasks) => {
+      return tasks.map((task, position) => {
+        if (position == index) {
+          return {
+            ...task,
+            completed: !task.completed,
+          };
+        }
+        return task;
+      });
+    });
+  }
 }
