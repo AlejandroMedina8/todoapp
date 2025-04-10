@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common'; //Directivas de control versiones anteriores
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+//Directivas de control versiones anteriores
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-labs',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './labs.component.html',
   styleUrl: './labs.component.css',
 })
@@ -31,6 +31,15 @@ export class LabsComponent {
   });
 
   colorCrtl = new FormControl();
+
+  widthCrtl = new FormControl(50, {
+    nonNullable: true,
+  });
+
+  nameCrtl = new FormControl('Alejo', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(3)],
+  });
 
   constructor() {
     this.colorCrtl.valueChanges.subscribe((value) => {
